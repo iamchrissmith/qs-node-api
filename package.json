@@ -4,7 +4,7 @@
   "description": "Quantified Self Node API",
   "main": "server.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",

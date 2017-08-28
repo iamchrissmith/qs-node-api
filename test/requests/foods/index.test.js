@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const app = require('../server');
+const app = require('../../../server');
 const request = require('request');
 
 describe('GET /api/v1/foods/', () => {
@@ -33,4 +33,4 @@ describe('GET /api/v1/foods/', () => {
       done();
     });
   });
-}
+});
