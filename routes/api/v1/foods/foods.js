@@ -11,6 +11,9 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const { id } = req.params
   const food = foods.find((food) => food.id == id);
+
+  if (!food) { return res.sendStatus(404); }
+  
   res.json(food);
 })
 
