@@ -1,0 +1,19 @@
+{
+  "name": "qs-node-api",
+  "version": "1.0.0",
+  "description": "Quantified Self Node API",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rongxanh88/qs-node-api.git"
+  },
+  "author": "Chris Smith and Bao Nguyen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rongxanh88/qs-node-api/issues"
+  },
+  "homepage": "https://github.com/rongxanh88/qs-node-api#readme"
+}
