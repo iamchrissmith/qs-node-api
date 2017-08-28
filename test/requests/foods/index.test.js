@@ -28,8 +28,9 @@ describe('GET /api/v1/foods/', () => {
 
   it('should return all foods', done => {
     this.request.get('/foods', (error, response) => {
-      assert.instanceof(response, 'array');
-      assert.instanceof(response[0], 'object');
+      const data = JSON.parse(response.body);
+      assert.instanceOf(data, Array);
+      assert.instanceOf(data[0], Object);
       done();
     });
   });
