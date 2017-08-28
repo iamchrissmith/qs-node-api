@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const { food } = req.body;
-  if(food.name == '') { return res.sendStatus(404); }
-  if(food.calories == '') { return res.sendStatus(404); }
+  if(food.name == '') { return res.sendStatus(400); }
+  if(food.calories == '') { return res.sendStatus(400); }
 
   food.id = foods.length + 1;
 

@@ -72,6 +72,22 @@ describe('Foods Endpoints', () => {
       });
     });
 
+    it('should return a 400 if name is missing', done => {
+      const newFood = {food: {name:'', calories:10}};
+      this.request.post('/foods', {form: newFood}, (error, response) => {
+        assert.equal(response.statusCode, 400);
+        done();
+      });
+    });
+
+    it('should return a 400 if calories is missing', done => {
+      const newFood = {food: {name:'A', calories:''}};
+      this.request.post('/foods', {form: newFood}, (error, response) => {
+        assert.equal(response.statusCode, 400);
+        done();
+      });
+    });
+
     it('should return data about the new food', done => {
       const newFood = {food: {name:'MyNewTest', calories:10}};
       this.request.post('/foods', {form: newFood}, (error, response) => {
