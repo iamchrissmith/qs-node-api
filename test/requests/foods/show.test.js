@@ -2,7 +2,7 @@ const assert = require('chai').assert;
 const app = require('../../../server');
 const request = require('request');
 
-describe('GET /api/v1/foods/', () => {
+describe('GET /api/v1/foods/:id', () => {
   before( done => {
     this.port = 9876;
     this.server = app.listen(this.port, (err, result) => {
@@ -20,17 +20,18 @@ describe('GET /api/v1/foods/', () => {
   });
 
   it('should return a 200', done => {
-    this.request.get('/foods', (error, response) => {
+    this.request.get('/foods/1', (error, response) => {
       assert.equal(response.statusCode, 200);
       done();
     });
   });
 
-  it('should return all foods', done => {
-    this.request.get('/foods', (error, response) => {
+  it('should return food by id', done => {
+    this.request.get('/foods/1', (error, response) => {
       const data = JSON.parse(response.body);
-      assert.isArray(data);
-      assert.isObject(data[0]);
+    
+      assert.isObject(data);
+      assert.hasAllKeys(data, ["id", "name", "calories"]);
       done();
     });
   });
