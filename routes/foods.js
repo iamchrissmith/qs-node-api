@@ -2,16 +2,16 @@ const express = require('express');
 const path    = require('path');
 const router  = express.Router();
 
-const food_controller = require('../controllers/foodController.js');
+const foodController = require('../controllers/foodController.js');
 
-router.get('/', food_controller.food_list);
+router.get('/', foodController.foodList);
 
-router.post('/', food_controller.food_create_post);
+router.post('/', foodController.foodCreatePost);
 
-router.get('/:id', food_controller.food_detail);
+router.get('/:id', foodController.foodDetail);
 
-router.put('/:id', food_controller.food_update_post);
+router.put('/:id', foodController.foodUpdatePost);
 
-router.delete('/:id', food_controller.food_delete);
+router.delete('/:id', foodController.foodDelete);
 
 module.exports = router;

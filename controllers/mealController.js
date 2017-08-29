@@ -16,7 +16,7 @@ exports.meals = (request, response) => {
     });
 };
 
-exports.meal_with_foods = (request, response) => {
+exports.mealWithFoods = (request, response) => {
   const mealID = request.params.meal_id;
 
   Meal.withFoods(mealID)
@@ -30,7 +30,7 @@ exports.meal_with_foods = (request, response) => {
     })
 };
 
-exports.add_food_to_meal = (request, response) => {
+exports.addFoodToMeal = (request, response) => {
   const mealID = request.params.meal_id;
   const foodID = request.params.id;
 
@@ -54,7 +54,7 @@ exports.add_food_to_meal = (request, response) => {
   })
 };
 
-exports.remove_food_from_meal = (request, response) => {
+exports.removeFoodFromMeal = (request, response) => {
   const mealID = request.params.meal_id;
   const foodID = request.params.id;
   let answer = { "message": "" };
