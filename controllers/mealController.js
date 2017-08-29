@@ -1,6 +1,7 @@
-const Meal       = require('../models/meal')
-
+const Meal = require('../models/meal')
 const pry  = require('pryjs')
+
+const meals = { 1:"Breakfast", 2:"Snack", 3:"Lunch", 4:"Dinner" }
 
 exports.meals = (request, response) => {
   Meal.all()
@@ -15,12 +16,17 @@ exports.meals = (request, response) => {
 };
 
 exports.meal_with_foods = (request, response) => {
-  // const mealID = request.params.id;
+  const mealID = request.params.meal_id;
 
-  // Meal.withFoods(mealID)
-  //   .then((foods) => {
-  //     response.json(foods);
-  //   })
+  Meal.withFoods(mealID)
+    .then((foods) => {
+      const meal = {
+        id: mealID,
+        name: meals[mealID],
+        foods: foods
+      }
+      response.json(meal);
+    })
 };
 
 exports.add_food_to_meal = (request, response) => {
