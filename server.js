@@ -4,7 +4,7 @@ const path          = require('path');
 const app           = express();
 const bodyParser    = require('body-parser');
 
-const foodRoutes    = require('./routes/api/v1/foods/foods.js');
+const foodRoutes    = require('./routes/foods.js');
 
 const environment   = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];

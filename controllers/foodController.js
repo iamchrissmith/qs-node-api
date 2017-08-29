@@ -1,14 +1,21 @@
-const express = require('express');
-const path    = require('path');
-const router  = express.Router();
+// const Food = require('../models/Food');
 
 const foods = require('./data/foods');
 
-router.get('/', (req, res) => {
+exports.food_list = (req, res) => {
   res.json(foods);
-});
+};
 
-router.post('/', (req, res) => {
+exports.food_detail = (req, res) => {
+  const { id } = req.params;
+  const food = foods.find((food) => food.id == id);
+
+  if (!food) { return res.sendStatus(404); }
+
+  res.json(food);
+};
+
+exports.food_create_post = (req, res) => {
   const { food } = req.body;
   if(food.name == '') { return res.sendStatus(400); }
   if(food.calories == '') { return res.sendStatus(400); }
@@ -16,18 +23,9 @@ router.post('/', (req, res) => {
   food.id = foods.length + 1;
 
   res.status(201).json(food);
-});
+};
 
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  const food = foods.find((food) => food.id == id);
-
-  if (!food) { return res.sendStatus(404); }
-
-  res.json(food);
-});
-
-router.put('/:id', (req, res) => {
+exports.food_update_post = (req, res) => {
   const { id } = req.params;
   const newFood = req.body.food;
   const food = foods.find((food) => food.id == id);
@@ -38,9 +36,9 @@ router.put('/:id', (req, res) => {
   if(food.calories != '') { food.calories = newFood.calories; }
 
   res.json(food);
-});
+};
 
-router.delete('/:id', (req, res) => {
+exports.food_delete = (req, res) => {
   const { id } = req.params;
   const food = foods.find((food) => food.id == id);
 
@@ -49,7 +47,4 @@ router.delete('/:id', (req, res) => {
   foods.splice(foods.indexOf(food), 1);
 
   res.json(req.params);
-})
-
-
-module.exports = router;
+};
