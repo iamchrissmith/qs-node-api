@@ -43,14 +43,18 @@ exports.food_create_post = (req, res) => {
 exports.food_update_post = (req, res) => {
   const { id } = req.params;
   const newFood = req.body.food;
-  const food = foods.find((food) => food.id == id);
+  if(newFood.name == '' || newFood.calories == '') {
+      res.sendStatus(400);
+  }
+  database.raw(
+    'UPDATE foods SET name = ?, calories = ? WHERE id = ? RETURNING id, name, calories',
+    [newFood.name, newFood.calories, id]
+  )
+  .then( (data) => {
+    if (!data) { return res.sendStatus(404); }
 
-  if (!food) { return res.sendStatus(404); }
-
-  if(food.name != '') { food.name = newFood.name; }
-  if(food.calories != '') { food.calories = newFood.calories; }
-
-  res.json(food);
+    res.json(data.rows[0]);
+  });
 };
 
 exports.food_delete = (req, res) => {
