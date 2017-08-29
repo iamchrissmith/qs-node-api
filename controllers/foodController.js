@@ -4,14 +4,14 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
-exports.food_list = (req, res) => {
+exports.foodList = (req, res) => {
   database.raw('SELECT id, name, calories FROM foods ORDER BY id ASC')
   .then( (foods) => {
     res.json(foods.rows);
   })
 };
 
-exports.food_detail = (req, res) => {
+exports.foodDetail = (req, res) => {
   const { id } = req.params;
   database.raw('SELECT id, name, calories FROM foods WHERE id = ?', id)
     .then( (data) => {
@@ -21,7 +21,7 @@ exports.food_detail = (req, res) => {
     });
 };
 
-exports.food_create_post = (req, res) => {
+exports.foodCreatePost = (req, res) => {
   const { food } = req.body;
   if(food.name == '') { return res.sendStatus(400); }
   if(food.calories == '') { return res.sendStatus(400); }
@@ -38,7 +38,7 @@ exports.food_create_post = (req, res) => {
 
 };
 
-exports.food_update_post = (req, res) => {
+exports.foodUpdatePost = (req, res) => {
   const { id } = req.params;
   const newFood = req.body.food;
   if(newFood.name == '' || newFood.calories == '') {
@@ -55,7 +55,7 @@ exports.food_update_post = (req, res) => {
   });
 };
 
-exports.food_delete = (req, res) => {
+exports.foodDelete = (req, res) => {
   const { id } = req.params;
   database.raw('DELETE FROM foods WHERE id = ?', id)
     .then( () => {
