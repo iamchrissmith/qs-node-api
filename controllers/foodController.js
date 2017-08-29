@@ -1,18 +1,26 @@
 // const Food = require('../models/Food');
 
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('../knexfile')[environment];
+const database = require('knex')(configuration);
+
 const foods = require('./data/foods');
 
 exports.food_list = (req, res) => {
-  res.json(foods);
+  database.raw('SELECT id, name, calories FROM foods ORDER BY id ASC')
+  .then( (foods) => {
+    res.json(foods.rows);
+  })
 };
 
 exports.food_detail = (req, res) => {
   const { id } = req.params;
-  const food = foods.find((food) => food.id == id);
+  database.raw('SELECT id, name, calories FROM foods WHERE id = ?', id)
+    .then( (data) => {
+      if (data.rowCount < 1) { return res.sendStatus(404); }
 
-  if (!food) { return res.sendStatus(404); }
-
-  res.json(food);
+      res.json(data.rows[0]);
+    });
 };
 
 exports.food_create_post = (req, res) => {
