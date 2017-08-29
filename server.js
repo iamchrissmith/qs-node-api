@@ -5,12 +5,12 @@ const app           = express();
 const bodyParser    = require('body-parser');
 
 const foodRoutes    = require('./routes/foods.js');
+const mealRoutes    = require('./routes/meals')
 
-const environment   = process.env.NODE_ENV || 'development';
-const configuration = require('./knexfile')[environment];
-const database      = require('knex')(configuration);
+// const environment   = process.env.NODE_ENV || 'development';
+// const configuration = require('./knexfile')[environment];
+// const database      = require('knex')(configuration);
 // const pry           = require('pryjs')
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
@@ -24,6 +24,7 @@ app.get('/', (request, response) => {
 });
 
 app.use('/api/v1/foods', foodRoutes);
+app.use('/api/v1/meals', mealRoutes);
 
 if (!module.parent) {
   app.listen(app.get('port'), function() {
