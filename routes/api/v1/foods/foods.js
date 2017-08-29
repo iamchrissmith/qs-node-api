@@ -38,6 +38,17 @@ router.put('/:id', (req, res) => {
   if(food.calories != '') { food.calories = newFood.calories; }
 
   res.json(food);
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  const food = foods.find((food) => food.id == id);
+
+  if (!food) { return res.sendStatus(404); }
+
+  foods.splice(foods.indexOf(food), 1);
+
+  res.json(req.params);
 })
 
 
