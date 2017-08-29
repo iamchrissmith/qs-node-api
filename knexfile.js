@@ -1,6 +1,6 @@
 module.exports = {
   test: {
-    client: 'postgresql',
+    client: 'pg',
     connection:'postgres://localhost/qs_node_api_test',
     migrations: {
       directory: './db/migrations'
@@ -12,10 +12,8 @@ module.exports = {
   },
   
   development: {
-    client: 'postgresql',
-    connection: {
-      filename: 'postgres://localhost/qs_node_api'
-    },
+    client: 'pg',
+    connection: 'postgres://localhost/qs_node_api',
     migrations: {
       directory: './db/migrations'
     },
@@ -26,13 +24,13 @@ module.exports = {
   },
 
   production: {
-    client: 'postgresql',
+    client: 'pg',
     connection: process.env.DATABASE_URL,
     migrations: {
       directory: './db/migrations'
     },
     seeds: {
-      directory: './db/seeds/production'
+      directory: './db/seeds/dev'
     },
     useNullAsDefault: true
   }
