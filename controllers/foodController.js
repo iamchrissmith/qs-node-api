@@ -4,8 +4,6 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
-const foods = require('./data/foods');
-
 exports.food_list = (req, res) => {
   database.raw('SELECT id, name, calories FROM foods ORDER BY id ASC')
   .then( (foods) => {
@@ -59,11 +57,8 @@ exports.food_update_post = (req, res) => {
 
 exports.food_delete = (req, res) => {
   const { id } = req.params;
-  const food = foods.find((food) => food.id == id);
-
-  if (!food) { return res.sendStatus(404); }
-
-  foods.splice(foods.indexOf(food), 1);
-
-  res.json(req.params);
+  database.raw('DELETE FROM foods WHERE id = ?', id)
+    .then( () => {
+      res.json({id})
+    });
 };

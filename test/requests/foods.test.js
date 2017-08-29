@@ -159,7 +159,7 @@ describe('Foods Endpoints', () => {
       database.raw('TRUNCATE foods RESTART IDENTITY')
         .then( () => done() )
     });
-    
+
     it('should return a 200', done => {
       const newFood = {food: {name:'MyNewTest', calories:10}};
       this.request.put('/foods/1', {form: newFood}, (error, response) => {
@@ -183,6 +183,18 @@ describe('Foods Endpoints', () => {
   });
 
   describe('DELETE /api/v1/foods/:id', () => {
+    beforeEach( done => {
+      database.raw(
+        'INSERT INTO foods (name, calories, created_at, updated_at) VALUES (?, ?, ?, ?)',
+        ["Banana", 150, new Date, new Date]
+      ).then(() => done())
+    });
+
+    afterEach( done => {
+      database.raw('TRUNCATE foods RESTART IDENTITY')
+        .then( () => done() )
+    });
+
     it('should return a 200', done => {
       this.request.delete('/foods/1', (error, response) => {
         assert.equal(response.statusCode, 200);
