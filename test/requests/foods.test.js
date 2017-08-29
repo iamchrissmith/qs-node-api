@@ -99,6 +99,16 @@ describe('Foods Endpoints', () => {
   });
 
   describe('POST /api/v1/foods', () => {
+    beforeEach( done => {
+      database.raw('TRUNCATE foods RESTART IDENTITY')
+        .then( () => done() )
+    });
+
+    afterEach( done => {
+      database.raw('TRUNCATE foods RESTART IDENTITY')
+        .then( () => done() )
+    });
+
     it('should return a 201', done => {
       const newFood = {food: {name:'MyNewTest', calories:10}};
       this.request.post('/foods', {form: newFood}, (error, response) => {

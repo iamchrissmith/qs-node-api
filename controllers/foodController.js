@@ -27,10 +27,17 @@ exports.food_create_post = (req, res) => {
   const { food } = req.body;
   if(food.name == '') { return res.sendStatus(400); }
   if(food.calories == '') { return res.sendStatus(400); }
+  const nowDate = new Date;
 
-  food.id = foods.length + 1;
+  database.raw(
+    'INSERT INTO foods (name, calories, created_at, updated_at) VALUES (?, ?, ?, ?) RETURNING id',
+    [food.name, food.calories, nowDate, nowDate]
+  )
+  .then( id => {
+    food.id = id;
+    res.status(201).json(food);
+  })
 
-  res.status(201).json(food);
 };
 
 exports.food_update_post = (req, res) => {
