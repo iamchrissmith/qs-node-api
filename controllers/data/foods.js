@@ -1,3 +1,0 @@
-const foods = [{"id":1,"name":"Banana","calories":150},{"id":2,"name":"Bagel Bites - Four Cheese","calories":650},{"id":3,"name":"Chicken Burrito","calories":800},{"id":4,"name":"Grapes","calories":180},{"id":5,"name":"Blueberry Muffins","calories":450},{"id":6,"name":"Yogurt","calories":550},{"id":7,"name":"Macaroni and Cheese","calories":950},{"id":8,"name":"Granola Bar","calories":200},{"id":9,"name":"Gum","calories":50},{"id":10,"name":"Cheese","calories":400},{"id":11,"name":"Fruit Snacks","calories":120},{"id":15,"name":"Apple Pie","calories":421},{"id":19,"name":"Tacos","calories":700},{"id":24,"name":"Worm Cookies","calories":235},{"id":27,"name":"Pho","calories":879},{"id":28,"name":"Teriyaki Sauce","calories":78}]
-
-module.exports = foods;
