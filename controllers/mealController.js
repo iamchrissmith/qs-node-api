@@ -1,4 +1,5 @@
 const Meal = require('../models/meal')
+const Food = require('../models/food')
 const pry  = require('pryjs')
 
 const meals = { 1:"Breakfast", 2:"Snack", 3:"Lunch", 4:"Dinner" }
@@ -35,23 +36,44 @@ exports.add_food_to_meal = (request, response) => {
 
   Promise.all([
     Meal.find(mealID),
-    Meal.food_find(foodID)
+    Food.find(foodID)
   ])
   .then((allData) => {
     const meal = allData[0];
     const food = allData[1];
-    let answer = { "message": "" }
+    let answer = { "message": "" };
 
     if (meal.length === 0 || food.length === 0) {
       answer["message"] = 'Cannot find request meal ' +
         'and/or food to add food to specified meal'
     } else {
-      answer["message"] = `Successfully added ${meal[0].name} to ${food[0].name}`
+      answer["message"] = `Successfully added ${food[0].name} to ${meal[0].name}`
+      Meal.addFood(mealID, foodID);
     }
     response.json(answer)
   })
 };
 
 exports.remove_food_from_meal = (request, response) => {
+  const mealID = request.params.meal_id;
+  const foodID = request.params.id;
+  let answer = { "message": "" };
 
+  Promise.all([
+    Meal.find(mealID),
+    Food.find(foodID)
+  ])
+  .then((allData) => {
+    const meal = allData[0];
+    const food = allData[1];
+
+    if (meal.length === 0 || food.length === 0) {
+      answer["message"] = 'Cannot find request meal ' +
+        'and/or food to remove food to specified meal'
+    } else {
+      answer["message"] = `Successfully removed ${food[0].name} to ${meal[0].name}`
+      Meal.removeFood(mealID, foodID);
+    }
+    response.json(answer)
+  })
 };
