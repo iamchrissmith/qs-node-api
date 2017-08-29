@@ -13,6 +13,24 @@ class Meal {
     });
   };
 
+  static find(meal_id) {
+    return database.raw(
+      'SELECT id, name FROM meals' +
+      ' WHERE meals.id = ?', meal_id
+    ).then((data) => {
+      return data.rows;
+    });
+  }
+
+  static food_find(food_id) {
+    return database.raw(
+      'SELECT id, name, calories FROM foods' +
+      ' WHERE foods.id = ?', food_id
+    ).then((data) => {
+      return data.rows;
+    });
+  }
+
   static withFoods(mealID) {
     return database.raw(
       'SELECT id, name, calories FROM foods' +
