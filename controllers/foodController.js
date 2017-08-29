@@ -1,50 +1,64 @@
 // const Food = require('../models/Food');
 
-const foods = require('./data/foods');
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('../knexfile')[environment];
+const database = require('knex')(configuration);
 
 exports.food_list = (req, res) => {
-  res.json(foods);
+  database.raw('SELECT id, name, calories FROM foods ORDER BY id ASC')
+  .then( (foods) => {
+    res.json(foods.rows);
+  })
 };
 
 exports.food_detail = (req, res) => {
   const { id } = req.params;
-  const food = foods.find((food) => food.id == id);
+  database.raw('SELECT id, name, calories FROM foods WHERE id = ?', id)
+    .then( (data) => {
+      if (data.rowCount < 1) { return res.sendStatus(404); }
 
-  if (!food) { return res.sendStatus(404); }
-
-  res.json(food);
+      res.json(data.rows[0]);
+    });
 };
 
 exports.food_create_post = (req, res) => {
   const { food } = req.body;
   if(food.name == '') { return res.sendStatus(400); }
   if(food.calories == '') { return res.sendStatus(400); }
+  const nowDate = new Date;
 
-  food.id = foods.length + 1;
+  database.raw(
+    'INSERT INTO foods (name, calories, created_at, updated_at) VALUES (?, ?, ?, ?) RETURNING id',
+    [food.name, food.calories, nowDate, nowDate]
+  )
+  .then( id => {
+    food.id = id;
+    res.status(201).json(food);
+  })
 
-  res.status(201).json(food);
 };
 
 exports.food_update_post = (req, res) => {
   const { id } = req.params;
   const newFood = req.body.food;
-  const food = foods.find((food) => food.id == id);
+  if(newFood.name == '' || newFood.calories == '') {
+      res.sendStatus(400);
+  }
+  database.raw(
+    'UPDATE foods SET name = ?, calories = ? WHERE id = ? RETURNING id, name, calories',
+    [newFood.name, newFood.calories, id]
+  )
+  .then( (data) => {
+    if (!data) { return res.sendStatus(404); }
 
-  if (!food) { return res.sendStatus(404); }
-
-  if(food.name != '') { food.name = newFood.name; }
-  if(food.calories != '') { food.calories = newFood.calories; }
-
-  res.json(food);
+    res.json(data.rows[0]);
+  });
 };
 
 exports.food_delete = (req, res) => {
   const { id } = req.params;
-  const food = foods.find((food) => food.id == id);
-
-  if (!food) { return res.sendStatus(404); }
-
-  foods.splice(foods.indexOf(food), 1);
-
-  res.json(req.params);
+  database.raw('DELETE FROM foods WHERE id = ?', id)
+    .then( () => {
+      res.json({id})
+    });
 };

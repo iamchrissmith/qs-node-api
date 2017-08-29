@@ -2,6 +2,10 @@ const assert = require('chai').assert;
 const app = require('../../server');
 const request = require('request');
 
+const environment = process.env.NODE_ENV || 'test';
+const configuration = require('../../knexfile')[environment];
+const database = require('knex')(configuration);
+
 describe('Foods Endpoints', () => {
   before( done => {
     this.port = 9876;
@@ -20,6 +24,23 @@ describe('Foods Endpoints', () => {
   });
 
   describe('GET /api/v1/foods/', () => {
+    beforeEach( done => {
+      database.raw(
+        'INSERT INTO foods (name, calories, created_at, updated_at) VALUES (?, ?, ?, ?)',
+        ["Banana", 150, new Date, new Date]
+      ).then( () => {
+        return database.raw(
+          'INSERT INTO foods (name, calories, created_at, updated_at) VALUES (?, ?, ?, ?)',
+          ["Bagel Bites - Four Cheese", 650, new Date, new Date],
+        );
+      }).then(() => done())
+    });
+
+    afterEach( done => {
+      database.raw('TRUNCATE foods RESTART IDENTITY')
+        .then( () => done() )
+    });
+
     it('should return a 200', done => {
       this.request.get('/foods', (error, response) => {
         assert.equal(response.statusCode, 200);
@@ -38,6 +59,18 @@ describe('Foods Endpoints', () => {
   });
 
   describe('GET /api/v1/foods/:id', () => {
+    beforeEach( done => {
+      database.raw(
+        'INSERT INTO foods (name, calories, created_at, updated_at) VALUES (?, ?, ?, ?)',
+        ["Banana", 150, new Date, new Date]
+      ).then(() => done())
+    });
+
+    afterEach( done => {
+      database.raw('TRUNCATE foods RESTART IDENTITY')
+        .then( () => done() )
+    });
+
     it('should return a 200', done => {
       this.request.get('/foods/1', (error, response) => {
         assert.equal(response.statusCode, 200);
@@ -51,6 +84,8 @@ describe('Foods Endpoints', () => {
 
         assert.isObject(data);
         assert.hasAllKeys(data, ["id", "name", "calories"]);
+        assert.equal(data.name, "Banana");
+        assert.equal(data.calories, 150);
         done();
       });
     });
@@ -64,6 +99,16 @@ describe('Foods Endpoints', () => {
   });
 
   describe('POST /api/v1/foods', () => {
+    beforeEach( done => {
+      database.raw('TRUNCATE foods RESTART IDENTITY')
+        .then( () => done() )
+    });
+
+    afterEach( done => {
+      database.raw('TRUNCATE foods RESTART IDENTITY')
+        .then( () => done() )
+    });
+
     it('should return a 201', done => {
       const newFood = {food: {name:'MyNewTest', calories:10}};
       this.request.post('/foods', {form: newFood}, (error, response) => {
@@ -103,6 +148,18 @@ describe('Foods Endpoints', () => {
   });
 
   describe('PATCH /api/v1/foods/:id', () => {
+    beforeEach( done => {
+      database.raw(
+        'INSERT INTO foods (name, calories, created_at, updated_at) VALUES (?, ?, ?, ?)',
+        ["Banana", 150, new Date, new Date]
+      ).then(() => done())
+    });
+
+    afterEach( done => {
+      database.raw('TRUNCATE foods RESTART IDENTITY')
+        .then( () => done() )
+    });
+
     it('should return a 200', done => {
       const newFood = {food: {name:'MyNewTest', calories:10}};
       this.request.put('/foods/1', {form: newFood}, (error, response) => {
@@ -126,6 +183,18 @@ describe('Foods Endpoints', () => {
   });
 
   describe('DELETE /api/v1/foods/:id', () => {
+    beforeEach( done => {
+      database.raw(
+        'INSERT INTO foods (name, calories, created_at, updated_at) VALUES (?, ?, ?, ?)',
+        ["Banana", 150, new Date, new Date]
+      ).then(() => done())
+    });
+
+    afterEach( done => {
+      database.raw('TRUNCATE foods RESTART IDENTITY')
+        .then( () => done() )
+    });
+
     it('should return a 200', done => {
       this.request.delete('/foods/1', (error, response) => {
         assert.equal(response.statusCode, 200);
