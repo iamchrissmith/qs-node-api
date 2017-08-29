@@ -25,6 +25,19 @@ router.get('/:id', (req, res) => {
   if (!food) { return res.sendStatus(404); }
 
   res.json(food);
+});
+
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const newFood = req.body.food;
+  const food = foods.find((food) => food.id == id);
+
+  if (!food) { return res.sendStatus(404); }
+
+  if(food.name != '') { food.name = newFood.name; }
+  if(food.calories != '') { food.calories = newFood.calories; }
+
+  res.json(food);
 })
 
 

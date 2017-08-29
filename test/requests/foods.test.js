@@ -101,4 +101,27 @@ describe('Foods Endpoints', () => {
       });
     });
   });
+
+  describe('PATCH /api/v1/foods/:id', () => {
+    it('should return a 201', done => {
+      const newFood = {food: {name:'MyNewTest', calories:10}};
+      this.request.put('/foods/1', {form: newFood}, (error, response) => {
+        assert.equal(response.statusCode, 200);
+        done();
+      });
+    });
+
+    it('should return data about the updated food', done => {
+      const newFood = {food: {name:'MyNewTest', calories:10}};
+      this.request.put('/foods/1', {form: newFood}, (error, response) => {
+        const data = JSON.parse(response.body);
+
+        assert.isObject(data);
+        assert.hasAllKeys(data, ["id", "name", "calories"]);
+        assert.equal(data.name, newFood.food.name, "Names do not match");
+        assert.equal(data.calories, newFood.food.calories, "Calories do not match");
+        done();
+      });
+    });
+  });
 });
