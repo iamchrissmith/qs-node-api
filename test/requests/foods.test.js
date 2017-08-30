@@ -31,7 +31,7 @@ describe('Foods Endpoints', () => {
       ).then( () => {
         return database.raw(
           'INSERT INTO foods (name, calories, created_at, updated_at) VALUES (?, ?, ?, ?)',
-          ["Bagel Bites - Four Cheese", 650, new Date, new Date],
+          ["Bagel Bites - Four Cheese", 650, new Date, new Date]
         );
       }).then(() => done())
     });

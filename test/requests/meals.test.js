@@ -1,0 +1,69 @@
+const assert = require('chai').assert;
+const app = require('../../server');
+const request = require('request');
+
+const environment = process.env.NODE_ENV || 'test';
+const configuration = require('../../knexfile')[environment];
+const database = require('knex')(configuration);
+
+const pry = require('pryjs');
+
+describe('Meal Endpoints', () => {
+  before( done => {
+    this.port = 9876;
+    this.server = app.listen(this.port, (error, results) => {
+      if (error) { done(error); }
+      done();
+    });
+
+    this.request = request.defaults({
+      baseUrl: 'http://localhost:9876/api/v1'
+    });
+  });
+
+  after( () => { this.server.close();})
+
+  const foodName = 'Turkey';
+  const mealName = 'Lunch';
+
+  beforeEach( done => {
+    Promise.all([
+      database('foods').insert(
+        { name: foodName, calories: 188, created_at: new Date, updated_at: new Date }
+      ),
+      database('meals').insert(
+        { name: mealName, created_at: new Date, updated_at: new Date }
+      )
+    ]).then( () => done() );
+  })
+  
+  afterEach( done => {
+    Promise.all([
+      database.raw('TRUNCATE meals RESTART IDENTITY'),
+      database.raw('TRUNCATE foods RESTART IDENTITY'),
+      database.raw('TRUNCATE meal_foods RESTART IDENTITY')
+    ]).then(() => done())
+  })
+
+  context('Successful Requests', () => {
+    it('adds food to a meal', done => {
+      this.request.post('meals/1/foods/1', (error, response) => {
+        assert.equal(response.statusCode, 200);
+        assert.equal(response.body, `{"message":"Successfully added ${foodName} to ${mealName}"}`);
+        done();
+      });
+    });
+    
+    it('removes food from a meal', done => {
+      database('meal_foods').insert(
+        { meal_id: 1, food_id: 1, created_at: new Date, updated_at: new Date }
+      ).then( () => {
+        this.request.delete('meals/1/foods/1', (error, response) => {
+          assert.equal(response.statusCode, 200);
+          assert.equal(response.body, `{"message":"Successfully removed ${foodName} from ${mealName}"}`)
+          done();
+        });
+      });
+    });
+  });
+});
