@@ -7,11 +7,12 @@ const meals = { 1:"Breakfast", 2:"Snack", 3:"Lunch", 4:"Dinner" }
 exports.meals = (request, response) => {
   Meal.all()
     .then((meals) => {
-      // Promise.all([meals.forEach(meal => Meal.foodsForMeal(meal))])
-      //   .then((foods) => {
-      //     eval(pry.it)
-      //   })
-
+      // Promise.all([
+      //   meals.map(meal => Meal.withFoods(meal.id))
+      // ])
+      // .then((allFoods) => {
+      //   eval(pry.it)
+      // })
       response.json(meals);
     });
 };
@@ -69,9 +70,9 @@ exports.removeFoodFromMeal = (request, response) => {
 
     if (meal.length === 0 || food.length === 0) {
       answer["message"] = 'Cannot find request meal ' +
-        'and/or food to remove food to specified meal'
+        'and/or food to remove food from specified meal'
     } else {
-      answer["message"] = `Successfully removed ${food[0].name} to ${meal[0].name}`
+      answer["message"] = `Successfully removed ${food[0].name} from ${meal[0].name}`
       Meal.removeFood(mealID, foodID);
     }
     response.json(answer)
