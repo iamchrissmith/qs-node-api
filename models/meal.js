@@ -45,6 +45,16 @@ class Meal {
       'AND meal_foods.food_id = ?', [mealID, foodID]
     ).then(data => data);
   }
+
+  static addFoodsToMeals(meals, foods) {
+    let index = 0;
+    return meals.map(meal => {
+      let mealObj = new Meal(meal);
+      mealObj.foods = foods[index];
+      index++;
+      return mealObj;
+    });
+  };
 }
 
 module.exports = Meal;

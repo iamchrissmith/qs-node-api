@@ -1,6 +1,5 @@
 const Meal = require('../models/meal');
 const Food = require('../models/food');
-const pry  = require('pryjs');
 
 let answer = { "message":"" };
 
@@ -11,13 +10,7 @@ exports.meals = (request, response) => {
         data.map(meal => Meal.withFoods(meal.id))
       )
       .then((allFoods) => {
-        let index = 0;
-        let meals = data.map(meal => {
-          let mealObj = new Meal(meal);
-          mealObj.foods = allFoods[index];
-          index++;
-          return mealObj;
-        })
+        const meals = Meal.addFoodsToMeals(data, allFoods);
         response.json(meals);
       });
     });
@@ -73,9 +66,9 @@ exports.removeFoodFromMeal = (request, response) => {
     Meal.find(mealID),
     Food.find(foodID)
   ])
-  .then((allData) => {
-    const meal = allData[0];
-    const food = allData[1];
+  .then((data) => {
+    const meal = data[0];
+    const food = data[1];
 
     if (meal.length === 0 || food.length === 0) {
       answer["message"] = 'Cannot find request meal ' +
