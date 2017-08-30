@@ -1,4 +1,4 @@
-const Food = require('../models/Food');
+const Food = require('../models/food');
 
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
