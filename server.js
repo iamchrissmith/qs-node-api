@@ -14,7 +14,7 @@ const mealRoutes = require('./routes/meals')
 // const database      = require('knex')(configuration);
 // const pry           = require('pryjs')
 
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.set('port', process.env.PORT || 3000);
