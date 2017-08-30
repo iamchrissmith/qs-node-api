@@ -65,5 +65,18 @@ describe('Meal Endpoints', () => {
         });
       });
     });
+    
+    it('returns a meal with its foods', done => {
+      const expected = '{"id":"1","name":"Breakfast","foods":[{"id":"1","name":"Turkey","calories":188}]}'
+      database('meal_foods').insert(
+        { meal_id: 1, food_id: 1, created_at: new Date, updated_at: new Date }
+      ).then( () => {
+        this.request.get('meals/1/foods', (error, response) => {
+          assert.equal(response.statusCode, 200);
+          assert.equal(response.body, expected);
+          done();
+        });
+      });
+    });
   });
 });
