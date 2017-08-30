@@ -65,7 +65,7 @@ describe('Meal Endpoints', () => {
     });
     
     it('returns a meal with its foods', done => {
-      const expected = '{"id":"1","name":"Breakfast","foods":[{"id":"1","name":"Turkey","calories":188}]}'
+      const expected = '{"id":"1","name":"Lunch","foods":[{"id":"1","name":"Turkey","calories":188}]}'
       database('meal_foods').insert(
         { meal_id: 1, food_id: 1, created_at: new Date, updated_at: new Date }
       ).then( () => {
@@ -101,8 +101,8 @@ describe('Meal Endpoints', () => {
       });
     });
 
-    it('returns empty foods', done => {
-      const expected = '{"id":"5","foods":[]}'
+    it('Unsuccessful message when finding meal', done => {
+      const expected = `{"message":"Can't find meal with id of 5"}`
 
       this.request.get('meals/5/foods', (error, response) => {
         assert.equal(response.statusCode, 200);

@@ -1,9 +1,16 @@
 const environment   = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database      = require('knex')(configuration);
-const pry  = require('pryjs')
+// const pry  = require('pryjs')
 
 class Meal {
+
+  constructor(attrs) {
+    this.id    = attrs.id;
+    this.name  = attrs.name;
+    this.foods = [];
+  }
+
   static all() {
     return database.raw(
       'SELECT id, name FROM meals'
@@ -39,7 +46,6 @@ class Meal {
       'AND meal_foods.food_id = ?', [mealID, foodID]
     ).then(data => data);
   }
-
 }
 
 module.exports = Meal;
