@@ -7,11 +7,6 @@ const bodyParser    = require('body-parser');
 const foodRoutes    = require('./routes/foods');
 const mealRoutes    = require('./routes/meals')
 
-// const environment   = process.env.NODE_ENV || 'development';
-// const configuration = require('./knexfile')[environment];
-// const database      = require('knex')(configuration);
-// const pry           = require('pryjs')
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.set('port', process.env.PORT || 3000);
