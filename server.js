@@ -1,17 +1,14 @@
-const express       = require('express');
-const path          = require('path');
+const express    = require('express');
+const path       = require('path');
+const cors       = require('cors')
+const bodyParser = require('body-parser');
 
-const app           = express();
-const bodyParser    = require('body-parser');
+const app        = express();
 
-const foodRoutes    = require('./routes/foods');
-const mealRoutes    = require('./routes/meals')
+const foodRoutes = require('./routes/foods');
+const mealRoutes = require('./routes/meals');
 
-// const environment   = process.env.NODE_ENV || 'development';
-// const configuration = require('./knexfile')[environment];
-// const database      = require('knex')(configuration);
-// const pry           = require('pryjs')
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.set('port', process.env.PORT || 3000);

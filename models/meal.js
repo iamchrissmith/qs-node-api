@@ -1,9 +1,15 @@
 const environment   = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database      = require('knex')(configuration);
-const pry  = require('pryjs')
 
 class Meal {
+
+  constructor(attrs) {
+    this.id    = attrs.id;
+    this.name  = attrs.name;
+    this.foods = [];
+  }
+
   static all() {
     return database.raw(
       'SELECT id, name FROM meals'
@@ -40,6 +46,15 @@ class Meal {
     ).then(data => data);
   }
 
+  static addFoodsToMeals(meals, foods) {
+    let index = 0;
+    return meals.map(meal => {
+      let mealObj = new Meal(meal);
+      mealObj.foods = foods[index];
+      index++;
+      return mealObj;
+    });
+  };
 }
 
 module.exports = Meal;
