@@ -6,14 +6,20 @@ let answer = { "message":"" };
 
 exports.meals = (request, response) => {
   Meal.all()
-    .then((meals) => {
-      // Promise.all([
-      //   meals.map(meal => Meal.withFoods(meal.id))
-      // ])
-      // .then((allFoods) => {
-      //   eval(pry.it)
-      // })
-      response.json(meals);
+    .then((data) => {
+      Promise.all(
+        data.map(meal => Meal.withFoods(meal.id))
+      )
+      .then((allFoods) => {
+        let index = 0;
+        let meals = data.map(meal => {
+          let mealObj = new Meal(meal);
+          mealObj.foods = allFoods[index];
+          index++;
+          return mealObj;
+        })
+        response.json(meals);
+      });
     });
 };
 
