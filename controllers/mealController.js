@@ -1,34 +1,38 @@
-const Meal = require('../models/meal')
-const Food = require('../models/food')
-const pry  = require('pryjs')
+const Meal = require('../models/meal');
+const Food = require('../models/food');
 
-const meals = { 1:"Breakfast", 2:"Snack", 3:"Lunch", 4:"Dinner" }
+let answer = { "message":"" };
 
 exports.meals = (request, response) => {
   Meal.all()
-    .then((meals) => {
-      // Promise.all([
-      //   meals.map(meal => Meal.withFoods(meal.id))
-      // ])
-      // .then((allFoods) => {
-      //   eval(pry.it)
-      // })
-      response.json(meals);
+    .then((data) => {
+      Promise.all(
+        data.map(meal => Meal.withFoods(meal.id))
+      )
+      .then((allFoods) => {
+        const meals = Meal.addFoodsToMeals(data, allFoods);
+        response.json(meals);
+      });
     });
 };
 
 exports.mealWithFoods = (request, response) => {
   const mealID = request.params.meal_id;
 
-  Meal.withFoods(mealID)
-    .then((foods) => {
-      const meal = {
-        id: mealID,
-        name: meals[mealID],
-        foods: foods
-      }
+  Promise.all([
+    Meal.find(mealID),
+    Meal.withFoods(mealID)
+  ])
+  .then((data) => {
+    if (data[0].length === 0) {
+      answer["message"] = `Can't find meal with id of ${mealID}`
+      response.json(answer)
+    } else {
+      let meal = new Meal(data[0][0]);
+      meal.foods = data[1];
       response.json(meal);
-    })
+    }
+  });
 };
 
 exports.addFoodToMeal = (request, response) => {
@@ -42,7 +46,6 @@ exports.addFoodToMeal = (request, response) => {
   .then((allData) => {
     const meal = allData[0];
     const food = allData[1];
-    let answer = { "message": "" };
 
     if (meal.length === 0 || food.length === 0) {
       answer["message"] = 'Cannot find request meal ' +
@@ -58,15 +61,14 @@ exports.addFoodToMeal = (request, response) => {
 exports.removeFoodFromMeal = (request, response) => {
   const mealID = request.params.meal_id;
   const foodID = request.params.id;
-  let answer = { "message": "" };
 
   Promise.all([
     Meal.find(mealID),
     Food.find(foodID)
   ])
-  .then((allData) => {
-    const meal = allData[0];
-    const food = allData[1];
+  .then((data) => {
+    const meal = data[0];
+    const food = data[1];
 
     if (meal.length === 0 || food.length === 0) {
       answer["message"] = 'Cannot find request meal ' +
