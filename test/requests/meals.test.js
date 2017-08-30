@@ -6,8 +6,6 @@ const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../../knexfile')[environment];
 const database = require('knex')(configuration);
 
-const pry = require('pryjs');
-
 describe('Meal Endpoints', () => {
   before( done => {
     this.port = 9876;
@@ -76,6 +74,40 @@ describe('Meal Endpoints', () => {
           assert.equal(response.body, expected);
           done();
         });
+      });
+    });
+  });
+
+  context('Unsuccessful Requests', () => {
+    it('Unsucessful message when deleting food from meal', done => {
+      const expected = '{"message":"Cannot find request meal ' +
+      'and/or food to remove food from specified meal"}'
+
+      this.request.delete('meals/2/foods/4', (error, response) => {
+        assert.equal(response.statusCode, 200);
+        assert.equal(response.body, expected);
+        done();
+      });
+    });
+
+    it('Unsuccessful message when adding food to meal', done => {
+      const expected = '{"message":"Cannot find request meal ' +
+      'and/or food to add food to specified meal"}'
+
+      this.request.post('meals/1/foods/5', (error, response) => {
+        assert.equal(response.statusCode, 200);
+        assert.equal(response.body, expected);
+        done();
+      });
+    });
+
+    it('returns empty foods', done => {
+      const expected = '{"id":"5","foods":[]}'
+
+      this.request.get('meals/5/foods', (error, response) => {
+        assert.equal(response.statusCode, 200);
+        assert.equal(response.body, expected);
+        done();
       });
     });
   });
