@@ -44,6 +44,31 @@ describe('Meal Endpoints', () => {
   })
 
   context('Successful Requests', () => {
+    it('returns all meals their foods', done => {
+      const expected = `[{"id":"1","name":"Lunch","foods":[{"id":"1","name":` +
+      `"Turkey","calories":188}]},{"id":"2","name":"Dinner","foods":` +
+      `[{"id":"1","name":"Turkey","calories":188}]}]`
+      
+      Promise.all([
+        database('meals').insert(
+          { name: 'Dinner', created_at: new Date, updated_at: new Date }
+        ),
+        database('meal_foods').insert(
+          { meal_id: 1, food_id: 1, created_at: new Date, updated_at: new Date }
+        ),
+        database('meal_foods').insert(
+          { meal_id: 2, food_id: 1, created_at: new Date, updated_at: new Date }
+        )
+      ])
+      .then( () => {
+        this.request.get('meals', (error, response) => {
+          assert.equal(response.statusCode, 200);
+          assert.equal(response.body, expected);
+          done();
+        });
+      });
+    });
+
     it('adds food to a meal', done => {
       this.request.post('meals/1/foods/1', (error, response) => {
         assert.equal(response.statusCode, 200);
