@@ -1,5 +1,6 @@
 exports.up = function(knex, Promise) {
   let createQuery = `CREATE TABLE meal_foods(
+    id BIGSERIAL NOT NULL,
     meal_id BIGINT NOT NULL,
     food_id BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL,
